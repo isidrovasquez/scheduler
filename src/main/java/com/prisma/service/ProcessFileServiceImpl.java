@@ -13,25 +13,23 @@ import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 
 @Service
-public class ProcessFileServiceImpl implements ProcessFileService {	
+public class ProcessFileServiceImpl implements ProcessFileService {
 
 	@Override
-	public void processPdfFiles(Path path,String formatDateTime,String outputFile,String temporalStoralFile)  {
-try {
-			
-			String movedName = path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf('.'))
-					+ "-" + formatDateTime;
-			String inFile = movePdfFile(path,movedName, temporalStoralFile);
-			
+	public void processPdfFiles(Path path, String formatDateTime, String outputFile, String temporalStoralFile) {
+		try {
+
+			String movedName = path.getFileName().toString().substring(0,
+					path.getFileName().toString().lastIndexOf('.')) + "-" + formatDateTime;
+			String inFile = movePdfFile(path, movedName, temporalStoralFile);
+
 			System.out.println("Reading " + inFile);
 			PdfReader reader = new PdfReader(inFile);
 			int n = reader.getNumberOfPages();
 			System.out.println("Number of pages : " + n);
 			int i = 0;
 			while (i < n) {
-				String outFile = outputFile
-						+ movedName
-						+ "-" + String.format("%03d", i + 1) + ".pdf";
+				String outFile = outputFile + movedName + "-" + String.format("%03d", i + 1) + ".pdf";
 				System.out.println("Writing " + outFile);
 				Document document = new Document(reader.getPageSizeWithRotation(1));
 				PdfCopy writer = new PdfCopy(document, new FileOutputStream(outFile));
@@ -40,22 +38,22 @@ try {
 				writer.addPage(page);
 				document.close();
 				writer.close();
-				reader.close();
 			}
-
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
-	public String movePdfFile(Path fileToMovePath,String preferedName,String temporalStoralFile) {
+	public String movePdfFile(Path fileToMovePath, String preferedName, String temporalStoralFile) {
 		Path targetPath = Paths.get(temporalStoralFile);
 		String finalTemporalPath = "";
 
 		try {
-			finalTemporalPath = Files.move(fileToMovePath, targetPath.resolve(preferedName+".pdf"),StandardCopyOption.REPLACE_EXISTING ).toString();
+			finalTemporalPath = Files.move(fileToMovePath, targetPath.resolve(preferedName + ".pdf"),
+					StandardCopyOption.REPLACE_EXISTING).toString();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

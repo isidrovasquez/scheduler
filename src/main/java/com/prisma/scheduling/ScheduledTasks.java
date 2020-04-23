@@ -29,13 +29,9 @@ public class ScheduledTasks {
 	private String temporalStoralFile;
 	@Value("${app.localDateTime}")
 	private String localDateTimeFormat;
-
-	private ProcessFileService processfileservice;
-
 	@Autowired
-	public void setProcessfileservice(ProcessFileService processfileservice) {
-		this.processfileservice = processfileservice;
-	}
+	private ProcessFileService processfileservice;
+		
 
 	@Scheduled(fixedRateString = "${intervalTime}")
 	public void consumeFiles() {
